@@ -2,6 +2,7 @@ package guru.spring.berkson.domain;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
  * Time: 15:33
  */
 @Data
+@Entity
 public class Category {
 
     @Id
