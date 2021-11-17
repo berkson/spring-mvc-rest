@@ -13,11 +13,28 @@ jobs:
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/openjdk
     docker:
       - image: cimg/openjdk:11.0
+
+    environment:
+      #Customize JVM Max Heap limit
+      MAVEN_OPTS: -Xmx3200m
+
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       # Checkout the code as the first step.
       - checkout
+      # Download and Cache dependencies
+      - restore_cache:
+          keys:
+            - maven-repo-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - maven-repo-v1-{{ .Branch }}-
+            - maven-repo-v1-
+
+      -save_cache:
+        path:~/.m2
+        key: maven-repo-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
+
+
       # Use mvn clean and package as the standard maven build phase
       - run:
           name: Build
@@ -26,6 +43,8 @@ jobs:
       - run:
           name: Test
           command: mvn test
+      - store_artifacts:
+          path: target
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
