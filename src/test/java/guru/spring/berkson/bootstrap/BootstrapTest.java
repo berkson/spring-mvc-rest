@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by Berkson Ximenes
@@ -21,11 +21,11 @@ class BootstrapTest {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
+    Bootstrap bootstrap;
+
     @Test
     void bootTest() throws Exception {
-        Bootstrap bootstrap = new Bootstrap(categoryRepository);
-        bootstrap.run();
-
         assertEquals(5, categoryRepository.count());
     }
 }
