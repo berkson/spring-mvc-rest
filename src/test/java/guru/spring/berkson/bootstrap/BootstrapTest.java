@@ -1,6 +1,6 @@
 package guru.spring.berkson.bootstrap;
 
-import guru.spring.berkson.repository.CategoryRepository;
+import guru.spring.berkson.repositories.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

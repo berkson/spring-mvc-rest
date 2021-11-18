@@ -1,4 +1,4 @@
-package guru.spring.berkson.repository;
+package guru.spring.berkson.repositories;
 
 import guru.spring.berkson.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Time: 15:41
  */
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+    Category findByName(String name);
 }

@@ -1,11 +1,10 @@
 package guru.spring.berkson.bootstrap;
 
 import guru.spring.berkson.domain.Category;
-import guru.spring.berkson.repository.CategoryRepository;
+import guru.spring.berkson.repositories.CategoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
