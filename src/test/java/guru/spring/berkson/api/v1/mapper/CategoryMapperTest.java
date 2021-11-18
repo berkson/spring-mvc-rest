@@ -4,8 +4,7 @@ import guru.spring.berkson.api.v1.model.CategoryDTO;
 import guru.spring.berkson.domain.Category;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by Berkson Ximenes
@@ -26,5 +25,14 @@ class CategoryMapperTest {
         assertNotNull(categoryDTO);
         assertEquals(1L, categoryDTO.getId());
         assertEquals("Fruits", categoryDTO.getName());
+    }
+
+    @Test
+    void testCategoryNull() {
+        Category category = null;
+
+        CategoryDTO categoryDTO = CategoryMapper.INSTANCE.categoryToCategoryDto(category);
+
+        assertNull(categoryDTO);
     }
 }
