@@ -51,5 +51,15 @@ class CategoryServiceTest {
 
     @Test
     void getCategoryByName() {
+        //given
+        Category category = new Category(ID, NAME);
+        when(categoryRepository.findByName(NAME)).thenReturn(category);
+
+        //when
+        CategoryDTO categoryDTO = categoryService.getCategoryByName(NAME);
+
+        assertNotNull(categoryDTO);
+        assertEquals(ID, categoryDTO.getId());
+        assertEquals(NAME, categoryDTO.getName());
     }
 }
