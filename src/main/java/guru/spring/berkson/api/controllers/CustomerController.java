@@ -28,13 +28,13 @@ public class CustomerController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        return new ResponseEntity<List<CustomerDTO>>(
+        return new ResponseEntity<>(
                 customerService.getAllCustomers(), HttpStatus.OK);
     }
 
     @GetMapping("/{firstname}")
     public ResponseEntity<CustomerDTO> getCustomerByFirstName(@PathVariable String firstname) {
-        return new ResponseEntity<CustomerDTO>(
+        return new ResponseEntity<>(
                 customerService.getCustomerByFirstName(firstname), HttpStatus.OK);
     }
 }

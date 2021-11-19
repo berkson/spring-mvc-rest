@@ -21,8 +21,8 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "meta_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Meta meta;
     private String firstName;
     private String lastname;

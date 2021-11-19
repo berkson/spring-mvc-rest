@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MetaDTO {
     private Integer count;
-    private Integer limit;
+    private Integer limite;
     private Integer page;
     private String previousUrl;
     private String nextUrl;

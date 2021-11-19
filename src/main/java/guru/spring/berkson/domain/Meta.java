@@ -20,20 +20,21 @@ import javax.persistence.*;
 @Table(name = "meta")
 public class Meta {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "customer_id", nullable = false)
     private Long id;
     private Integer count;
-    private Integer limit;
+    private Integer limite;
     private Integer page;
     private String previousUrl;
     private String nextUrl;
-    @OneToOne(mappedBy = "meta")
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    public Meta(Integer count, Integer limit, Integer page, String previousUrl, String nextUrl) {
+    public Meta(Integer count, Integer limite, Integer page, String previousUrl, String nextUrl) {
         this.count = count;
-        this.limit = limit;
+        this.limite = limite;
         this.page = page;
         this.previousUrl = previousUrl;
         this.nextUrl = nextUrl;
