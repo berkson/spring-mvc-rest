@@ -12,5 +12,6 @@ import java.util.List;
 public interface CategoryService {
     List<CategoryDTO> getAllCategories();
 
-    public CategoryDTO getCategoryByName(String name);
+    CategoryDTO getCategoryByName(String name);
+
 }

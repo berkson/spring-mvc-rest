@@ -30,7 +30,7 @@ public class Bootstrap implements CommandLineRunner {
     private void saveCategories(){
         List<Category> categoryList = Arrays.asList(new Category("Fruits"),
                 new Category("Dried"), new Category("Fresh"), new Category("Exotic"),
-                new Category("Nuts"));
+                new Category("Nuts"), new Category("Café"));
         categoryRepository.saveAll(categoryList);
         System.out.println("Data Loaded: " + categoryRepository.count());
     }

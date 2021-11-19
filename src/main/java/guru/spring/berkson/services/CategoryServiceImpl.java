@@ -37,4 +37,5 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO getCategoryByName(String name) {
         return categoryMapper.categoryToCategoryDto(categoryRepository.findByName(name));
     }
+
 }

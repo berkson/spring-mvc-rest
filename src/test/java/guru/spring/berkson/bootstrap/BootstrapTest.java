@@ -26,6 +26,6 @@ class BootstrapTest {
 
     @Test
     void bootTest() throws Exception {
-        assertEquals(5, categoryRepository.count());
+        assertEquals(6, categoryRepository.count());
     }
 }
