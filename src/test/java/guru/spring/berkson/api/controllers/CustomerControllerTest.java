@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Time: 20:20
  */
 class CustomerControllerTest {
+    private static final Long CUSTOMER_ID = 6L;
     private static final String FIRSTNAME = "Zane";
     private static final String LASTNAME = "Soares";
     private static final String URL = "/shop/customer/123";
@@ -89,5 +90,36 @@ class CustomerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo(FIRSTNAME)));
+    }
+
+    @Test
+    void getCustomerById() throws Exception {
+        //given
+        when(customerService.getCustomerById(CUSTOMER_ID)).thenReturn(customerDTO);
+
+        //when
+        CustomerDTO customerDTO = customerService.getCustomerById(CUSTOMER_ID);
+
+        //then
+        assertNotNull(customerDTO);
+        mockMvc.perform(get("/api/v1/customers/id/" + CUSTOMER_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstname", equalTo(FIRSTNAME)));
+    }
+
+    @Test
+    void getCustomerByIdEmpty() throws Exception {
+        //given
+        when(customerService.getCustomerById(CUSTOMER_ID)).thenReturn(new CustomerDTO());
+
+        //when
+        CustomerDTO customerDTO = customerService.getCustomerById(CUSTOMER_ID);
+
+        //then
+        assertNotNull(customerDTO);
+        mockMvc.perform(get("/api/v1/customers/id/" + CUSTOMER_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

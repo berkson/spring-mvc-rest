@@ -12,9 +12,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
  */
 class CustomerServiceTest {
     private static final String FIRSTNAME = "John";
+    private static final Long CUSTOMER_ID = 5L;
 
     Customer customer;
 
@@ -38,10 +39,11 @@ class CustomerServiceTest {
         customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);
         Meta customerMeta = new Meta(52, 12, 5, "/url/teste/p", "/url/teste/n");
         customer = new Customer(customerMeta, FIRSTNAME, "Jacusi", "/shop/customer/234");
+        customer.setId(CUSTOMER_ID);
     }
 
     @Test
-    void getAllCustomers() {
+    void testGetAllCustomers() {
         //given
         Meta meta = new Meta(31, 5, 1,
                 "/shop/products/?page=1&limit5",
@@ -59,7 +61,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void getCustomerByFirstName() {
+    void getCustomerByFirstname() {
         //given
         when(customerRepository.findByFirstname(FIRSTNAME)).thenReturn(customer);
 
@@ -70,4 +72,31 @@ class CustomerServiceTest {
         assertNotNull(customerDTO);
         assertEquals(FIRSTNAME, customerDTO.getFirstname());
     }
+
+    @Test
+    void getById() {
+        //given
+        when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
+
+        //when
+        CustomerDTO customerDTO = customerService.getCustomerById(CUSTOMER_ID);
+
+        //then
+        assertEquals(FIRSTNAME, customerDTO.getFirstname());
+    }
+
+    @Test
+    void emptyGetById() {
+        //given
+        when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(new Customer()));
+
+        //when
+        CustomerDTO customerDTO = customerService.getCustomerById(CUSTOMER_ID);
+
+        //then
+        assertNotNull(customerDTO);
+        assertNull(customerDTO.getFirstname());
+        assertNull(customerDTO.getLastname());
+    }
+
 }

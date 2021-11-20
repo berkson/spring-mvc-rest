@@ -37,10 +37,10 @@ public class CustomerBootStrap implements CommandLineRunner {
                 "Victor", "Soares", "/shop/customer/856");
         Customer berkson = new Customer(
                 bMeta,
-                "Victor", "Soares", "/shop/customer/856");
+                "Berkson", "Soares", "/shop/customer/398");
         Customer diego = new Customer(
                 dMeta,
-                "Victor", "Soares", "/shop/customer/256");
+                "Diego", "Soares", "/shop/customer/256");
 
         customers.add(victor);
         customers.add(berkson);

@@ -36,4 +36,9 @@ public class CustomerController {
         return new ResponseEntity<>(
                 customerService.getCustomerByFirstname(firstname), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
+        return new ResponseEntity<>(customerService.getCustomerById(id), HttpStatus.OK);
+    }
 }
