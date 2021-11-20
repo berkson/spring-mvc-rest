@@ -33,8 +33,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerByFirstName(String firstname) {
+    public CustomerDTO getCustomerByFirstname(String firstname) {
         return customerMapper
-                .customerToCustomerDTO(customerRepository.findByFirstName(firstname));
+                .customerToCustomerDTO(customerRepository.findByFirstname(firstname));
     }
 }

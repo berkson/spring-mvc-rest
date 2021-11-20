@@ -12,5 +12,5 @@ import java.util.List;
 public interface CustomerService {
     List<CustomerDTO> getAllCustomers();
 
-    CustomerDTO getCustomerByFirstName(String firstname);
+    CustomerDTO getCustomerByFirstname(String firstname);
 }

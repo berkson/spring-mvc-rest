@@ -61,10 +61,10 @@ class CustomerServiceTest {
     @Test
     void getCustomerByFirstName() {
         //given
-        when(customerRepository.findByFirstName(FIRSTNAME)).thenReturn(customer);
+        when(customerRepository.findByFirstname(FIRSTNAME)).thenReturn(customer);
 
         //when
-        CustomerDTO customerDTO = customerService.getCustomerByFirstName(FIRSTNAME);
+        CustomerDTO customerDTO = customerService.getCustomerByFirstname(FIRSTNAME);
 
         //then
         assertNotNull(customerDTO);

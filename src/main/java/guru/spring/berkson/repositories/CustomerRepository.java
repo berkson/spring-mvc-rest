@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Time: 22:53
  */
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-    Customer findByFirstName(String firstname);
+    Customer findByFirstname(String firstname);
 }

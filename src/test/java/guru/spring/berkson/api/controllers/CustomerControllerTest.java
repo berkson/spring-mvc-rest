@@ -78,10 +78,10 @@ class CustomerControllerTest {
     @Test
     void getCustomerByFirstName() throws Exception {
         //given
-        when(customerService.getCustomerByFirstName(FIRSTNAME)).thenReturn(customerDTO);
+        when(customerService.getCustomerByFirstname(FIRSTNAME)).thenReturn(customerDTO);
 
         //when
-        CustomerDTO customerDTO = customerService.getCustomerByFirstName(FIRSTNAME);
+        CustomerDTO customerDTO = customerService.getCustomerByFirstname(FIRSTNAME);
 
         //then
         assertNotNull(customerDTO);

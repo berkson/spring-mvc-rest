@@ -34,6 +34,6 @@ public class CustomerController {
     @GetMapping(value = "/{firstname}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDTO> getCustomerByFirstName(@PathVariable String firstname) {
         return new ResponseEntity<>(
-                customerService.getCustomerByFirstName(firstname), HttpStatus.OK);
+                customerService.getCustomerByFirstname(firstname), HttpStatus.OK);
     }
 }
