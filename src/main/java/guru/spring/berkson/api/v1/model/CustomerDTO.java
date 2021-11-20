@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CustomerDTO {
     private MetaDTO meta;
-    private String firstName;
+    private String firstname;
     private String lastname;
     private String customerUrl;
 }

@@ -24,13 +24,13 @@ public class Customer {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Meta meta;
-    private String firstName;
+    private String firstname;
     private String lastname;
     private String customerUrl;
 
-    public Customer(Meta meta, String firstName, String lastname, String customerUrl) {
+    public Customer(Meta meta, String firstname, String lastname, String customerUrl) {
         this.meta = meta;
-        this.firstName = firstName;
+        this.firstname = firstname;
         this.lastname = lastname;
         this.customerUrl = customerUrl;
     }
