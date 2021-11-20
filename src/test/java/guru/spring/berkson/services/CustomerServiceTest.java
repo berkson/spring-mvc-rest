@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,6 +98,16 @@ class CustomerServiceTest {
         assertNotNull(customerDTO);
         assertNull(customerDTO.getFirstname());
         assertNull(customerDTO.getLastname());
+    }
+
+    @Test
+    void getByIdDoNotExists() {
+        //given
+        when(customerRepository.findById(CUSTOMER_ID)).thenThrow(new NoSuchElementException());
+
+        //then
+        assertDoesNotThrow(() -> customerService.getCustomerById(CUSTOMER_ID));
+
     }
 
 }
