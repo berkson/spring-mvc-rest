@@ -34,13 +34,13 @@ public class CustomerBootStrap implements CommandLineRunner {
         Meta dMeta = new Meta(28, 15, 6, "/shop/products/?page=6&limit=15", "/shop/products/?page=3&limit=10");
         Customer victor = new Customer(
                 vMeta,
-                "Victor", "Soares", "/shop/customer/856");
+                "Victor", "Soares", "/shop/customer/");
         Customer berkson = new Customer(
                 bMeta,
-                "Berkson", "Soares", "/shop/customer/398");
+                "Berkson", "Soares", "/shop/customer/");
         Customer diego = new Customer(
                 dMeta,
-                "Diego", "Soares", "/shop/customer/256");
+                "Diego", "Soares", "/shop/customer/");
 
         customers.add(victor);
         customers.add(berkson);
@@ -48,7 +48,11 @@ public class CustomerBootStrap implements CommandLineRunner {
         customers.get(0).getMeta().setCustomer(victor);
         customers.get(1).getMeta().setCustomer(berkson);
         customers.get(2).getMeta().setCustomer(diego);
-        customerRepository.saveAll(customers);
+        for (Customer customer: customers){
+             Customer customer1 = customerRepository.save(customer);
+             customer1.setCustomerUrl(customer1.getCustomerUrl() + customer1.getId());
+            customerRepository.save(customer1);
+        }
         System.out.println("Salvando Clientes: " + customerRepository.count());
     }
 }
