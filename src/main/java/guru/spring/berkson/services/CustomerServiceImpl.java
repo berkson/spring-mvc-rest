@@ -1,5 +1,6 @@
 package guru.spring.berkson.services;
 
+import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.domain.Customer;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -43,13 +45,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerById(Long id) {
+    public CustomerDTO getCustomerById(Long id) throws CustomerNotFoundException {
         try {
             return (CustomerDTO) customerRepository
                     .findById(id).map((Function<Customer, Object>) customerMapper::customerToCustomerDTO).get();
-        } catch (Exception e) {
-            log.error("This customer does not exist", e);
+        } catch (NoSuchElementException e) {
+            throw new CustomerNotFoundException("Customer not found!");
         }
-        return new CustomerDTO();
     }
 }
