@@ -1,5 +1,6 @@
-package guru.spring.berkson.api.controllers;
+package guru.spring.berkson.api.v1.controllers;
 
+import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.api.v1.model.MetaDTO;
 import guru.spring.berkson.services.CustomerService;
@@ -14,10 +15,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -43,12 +45,16 @@ class CustomerControllerTest {
     @InjectMocks
     CustomerController customerController;
 
+    @InjectMocks
+    CustomerNotFoundAdvice customerNotFoundAdvice;
+
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController)
+                .setControllerAdvice(customerNotFoundAdvice).build();
         MetaDTO customerMeta = new MetaDTO(52, 12, 5, PREVIOUSURL, NEXTURL);
         customerDTO = new CustomerDTO(customerMeta, FIRSTNAME, LASTNAME, URL);
     }
@@ -111,15 +117,21 @@ class CustomerControllerTest {
     @Test
     void getCustomerByIdEmpty() throws Exception {
         //given
-        when(customerService.getCustomerById(CUSTOMER_ID)).thenReturn(new CustomerDTO());
+        when(customerService.getCustomerById(CUSTOMER_ID))
+                .thenThrow(new CustomerNotFoundException(CUSTOMER_ID));
 
         //when
-        CustomerDTO customerDTO = customerService.getCustomerById(CUSTOMER_ID);
+        assertThrows(CustomerNotFoundException.class, () -> {
+            CustomerDTO customerDTO = customerService.getCustomerById(CUSTOMER_ID);
+        });
 
         //then
-        assertNotNull(customerDTO);
         mockMvc.perform(get("/api/v1/customers/id/" + CUSTOMER_ID)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError())
+                .andExpect(result -> assertTrue(result
+                        .getResolvedException() instanceof CustomerNotFoundException))
+                .andExpect(result -> assertEquals("Customer id: " + CUSTOMER_ID + ", not found!",
+                        result.getResolvedException().getMessage()));
     }
 }

@@ -1,4 +1,4 @@
-package guru.spring.berkson.api.controllers;
+package guru.spring.berkson.api.v1.controllers;
 
 import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package guru.spring.berkson.api.controllers;
+package guru.spring.berkson.api.v1.controllers;
 
 import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.NoSuchElementException;
 
 /**
  * Created by Berkson Ximenes
@@ -40,6 +38,10 @@ public class CustomerController {
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public CustomerDTO getCustomerById(@PathVariable Long id) {
-        return customerService.getCustomerById(id);
+        try {
+            return customerService.getCustomerById(id);
+        } catch (Exception e) {
+            throw new CustomerNotFoundException(id);
+        }
     }
 }

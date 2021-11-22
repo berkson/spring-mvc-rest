@@ -1,4 +1,4 @@
-package guru.spring.berkson.api.controllers;
+package guru.spring.berkson.api.v1.controllers;
 
 import guru.spring.berkson.api.v1.model.CategoryDTO;
 import guru.spring.berkson.services.CategoryService;

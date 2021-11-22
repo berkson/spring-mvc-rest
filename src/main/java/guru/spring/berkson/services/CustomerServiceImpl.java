@@ -45,12 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerById(Long id) throws CustomerNotFoundException {
-        try {
-            return (CustomerDTO) customerRepository
+    public CustomerDTO getCustomerById(Long id) throws NoSuchElementException {
+       return (CustomerDTO) customerRepository
                     .findById(id).map((Function<Customer, Object>) customerMapper::customerToCustomerDTO).get();
-        } catch (NoSuchElementException e) {
-            throw new CustomerNotFoundException("Customer not found!");
-        }
     }
 }

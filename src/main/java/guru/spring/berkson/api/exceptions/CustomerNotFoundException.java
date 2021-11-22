@@ -18,4 +18,8 @@ public class CustomerNotFoundException extends RuntimeException {
     public CustomerNotFoundException(Throwable cause) {
         super(cause);
     }
+
+    public CustomerNotFoundException(Long id){
+        super(String.format("Customer id: %d, not found!", id));
+    }
 }

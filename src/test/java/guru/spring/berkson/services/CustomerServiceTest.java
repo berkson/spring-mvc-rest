@@ -1,5 +1,6 @@
 package guru.spring.berkson.services;
 
+import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.domain.Customer;
@@ -106,7 +107,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(CUSTOMER_ID)).thenThrow(new NoSuchElementException());
 
         //then
-        assertDoesNotThrow(() -> customerService.getCustomerById(CUSTOMER_ID));
+        assertThrows(NoSuchElementException.class, () -> customerService.getCustomerById(CUSTOMER_ID));
 
     }
 
