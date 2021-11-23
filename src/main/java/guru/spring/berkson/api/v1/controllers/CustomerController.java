@@ -44,4 +44,10 @@ public class CustomerController {
             throw new CustomerNotFoundException(id);
         }
     }
+
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomerDTO> createNewCustomer(@RequestBody CustomerDTO customerDTO) {
+        return new ResponseEntity<>(
+                customerService.createNewCustomer(customerDTO), HttpStatus.CREATED);
+    }
 }

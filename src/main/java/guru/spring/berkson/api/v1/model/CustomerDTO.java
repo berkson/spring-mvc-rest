@@ -1,6 +1,7 @@
 package guru.spring.berkson.api.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,6 @@ public class CustomerDTO {
     private MetaDTO meta;
     private String firstname;
     private String lastname;
+    @JsonProperty("customer_url")
     private String customerUrl;
 }

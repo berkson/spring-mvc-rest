@@ -1,8 +1,8 @@
 package guru.spring.berkson.services;
 
-import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
+import guru.spring.berkson.api.v1.model.MetaDTO;
 import guru.spring.berkson.domain.Customer;
 import guru.spring.berkson.domain.Meta;
 import guru.spring.berkson.repositories.CustomerRepository;
@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -32,13 +33,15 @@ class CustomerServiceTest {
 
     CustomerService customerService;
 
+    private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
+
     @Mock
     CustomerRepository customerRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);
+        customerService = new CustomerServiceImpl(customerMapper, customerRepository);
         Meta customerMeta = new Meta(52, 12, 5, "/url/teste/p", "/url/teste/n");
         customer = new Customer(customerMeta, FIRSTNAME, "Jacusi", "/shop/customer/234");
         customer.setId(CUSTOMER_ID);
@@ -104,11 +107,36 @@ class CustomerServiceTest {
     @Test
     void getByIdDoNotExists() {
         //given
-        when(customerRepository.findById(CUSTOMER_ID)).thenThrow(new NoSuchElementException());
+        when(customerRepository.findById(any(Long.class))).thenThrow(new NoSuchElementException());
 
         //then
         assertThrows(NoSuchElementException.class, () -> customerService.getCustomerById(CUSTOMER_ID));
 
     }
 
+    @Test
+    void createNewCustomer() {
+        //given
+        MetaDTO metaDTO = new MetaDTO(31, 5, 1,
+                "/shop/products/?page=1&limit5",
+                "/shops/products?page=2$limit5");
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstname("Jim");
+        customerDTO.setMeta(metaDTO);
+
+        Customer saved = new Customer();
+        saved.setFirstname(customerDTO.getFirstname());
+        saved.setLastname(customerDTO.getLastname());
+        saved.setId(6L);
+
+        when(customerRepository.save(any(Customer.class))).thenReturn(saved);
+        //when
+        CustomerDTO savedDTO = customerService.createNewCustomer(customerDTO);
+
+        //then
+        assertNotNull(savedDTO);
+        assertEquals(customerDTO.getFirstname(), savedDTO.getFirstname());
+        assertEquals("/api/v1/customers/id/6", savedDTO.getCustomerUrl());
+
+    }
 }

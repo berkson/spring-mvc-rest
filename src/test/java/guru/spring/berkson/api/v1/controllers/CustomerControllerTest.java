@@ -15,15 +15,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
+import static guru.spring.berkson.api.v1.controllers.AbstractRestControllerTest.asJsonString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by Berkson Ximenes
@@ -134,4 +135,33 @@ class CustomerControllerTest {
                 .andExpect(result -> assertEquals("Customer id: " + CUSTOMER_ID + ", not found!",
                         result.getResolvedException().getMessage()));
     }
+
+    @Test
+    void createNewCustomer() throws Exception {
+        //given
+        MetaDTO metaDTO = new MetaDTO(31, 5, 1,
+                "/shop/products/?page=1&limit5",
+                "/shops/products?page=2$limit5");
+        CustomerDTO customer = new CustomerDTO();
+        customer.setFirstname("Fred");
+        customer.setLastname("Flintstone");
+        customer.setMeta(metaDTO);
+        customer.setCustomerUrl("/api/v1/customers/id/");
+
+        CustomerDTO returnDTO = new CustomerDTO();
+        returnDTO.setFirstname(customer.getFirstname());
+        returnDTO.setLastname(customer.getLastname());
+        returnDTO.setCustomerUrl("/api/v1/customers/id/1");
+
+        when(customerService.createNewCustomer(any(CustomerDTO.class))).thenReturn(returnDTO);
+        //when/then
+        mockMvc.perform(post("/api/v1/customers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(customer)))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(asJsonString(returnDTO)))
+                .andExpect(jsonPath("$.firstname", equalTo("Fred")))
+                .andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/id/1")));
+    }
+
 }

@@ -1,6 +1,5 @@
 package guru.spring.berkson.services;
 
-import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.domain.Customer;
@@ -46,7 +45,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO getCustomerById(Long id) throws NoSuchElementException {
-       return (CustomerDTO) customerRepository
-                    .findById(id).map((Function<Customer, Object>) customerMapper::customerToCustomerDTO).get();
+        return (CustomerDTO) customerRepository
+                .findById(id).map((Function<Customer, Object>) customerMapper::customerToCustomerDTO).get();
+    }
+
+    @Override
+    public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+        Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
+        customer.getMeta().setCustomer(customer);
+        Customer saved = customerRepository.save(customer);
+        saved.setCustomerUrl("/api/v1/customers/id/" + saved.getId());
+        customerRepository.save(saved);
+        return customerMapper.customerToCustomerDTO(saved);
     }
 }
