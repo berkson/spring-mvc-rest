@@ -48,5 +48,6 @@ public class CustomerServiceIT {
         assertEquals(FIRSTNAME, newCustomerDTO.getFirstname());
         assertNotEquals(apiURI, newCustomerDTO.getCustomerUrl());
         assertEquals(10, newCustomerDTO.getMeta().getCount());
+        assertEquals(6, newCustomerDTO.getMeta().getLimite());
     }
 }
