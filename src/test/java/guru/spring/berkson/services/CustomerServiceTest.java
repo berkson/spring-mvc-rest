@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Berkson Ximenes
@@ -201,5 +201,23 @@ class CustomerServiceTest {
             customerService.updateCustomer(6L, new CustomerDTO());
         });
 
+    }
+
+    @Test
+    void deleteCustomer() {
+        Long id = 2L;
+
+        customerRepository.deleteById(id);
+
+        verify(customerRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void deleteCustomerEmpty() {
+        when(customerRepository.existsById(5L)).thenReturn(false);
+
+        assertThrows(CustomerNotFoundException.class, () -> {
+            customerService.deleteCustomer(5L);
+        });
     }
 }
