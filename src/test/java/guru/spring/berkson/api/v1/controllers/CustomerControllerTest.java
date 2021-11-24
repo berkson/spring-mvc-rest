@@ -212,7 +212,7 @@ class CustomerControllerTest {
         });
 
         //then
-        mockMvc.perform(put("/api/v1/customers/id/10")
+        mockMvc.perform(put("/api/v1/customers/id/2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(newDTO)))
                 .andExpect(status().is4xxClientError())
