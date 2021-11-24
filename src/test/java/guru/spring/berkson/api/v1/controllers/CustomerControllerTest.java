@@ -3,6 +3,8 @@ package guru.spring.berkson.api.v1.controllers;
 import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.api.v1.model.MetaDTO;
+import guru.spring.berkson.domain.Customer;
+import guru.spring.berkson.domain.Meta;
 import guru.spring.berkson.repositories.CustomerRepository;
 import guru.spring.berkson.services.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,6 +41,8 @@ class CustomerControllerTest {
     private static final String URL = "/shop/customer/123";
     private static final String PREVIOUSURL = "/shop/products/?page=2&limit=5";
     private static final String NEXTURL = "/shop/products/?page=3&limit=10";
+    private static final String API_ID = "/api/v1/customers/id/";
+
     CustomerDTO customerDTO;
 
     @Mock
@@ -112,7 +117,7 @@ class CustomerControllerTest {
 
         //then
         assertNotNull(customerDTO);
-        mockMvc.perform(get("/api/v1/customers/id/" + CUSTOMER_ID)
+        mockMvc.perform(get(API_ID + CUSTOMER_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo(FIRSTNAME)));
@@ -130,7 +135,7 @@ class CustomerControllerTest {
         });
 
         //then
-        mockMvc.perform(get("/api/v1/customers/id/" + CUSTOMER_ID)
+        mockMvc.perform(get(API_ID + CUSTOMER_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(result -> assertTrue(result
@@ -149,12 +154,12 @@ class CustomerControllerTest {
         customer.setFirstname("Fred");
         customer.setLastname("Flintstone");
         customer.setMeta(metaDTO);
-        customer.setCustomerUrl("/api/v1/customers/id/");
+        customer.setCustomerUrl(API_ID);
 
         CustomerDTO returnDTO = new CustomerDTO();
         returnDTO.setFirstname(customer.getFirstname());
         returnDTO.setLastname(customer.getLastname());
-        returnDTO.setCustomerUrl("/api/v1/customers/id/1");
+        returnDTO.setCustomerUrl(API_ID + "1");
 
         when(customerService.createNewCustomer(any(CustomerDTO.class))).thenReturn(returnDTO);
         //when/then
@@ -164,7 +169,7 @@ class CustomerControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json(asJsonString(returnDTO)))
                 .andExpect(jsonPath("$.firstname", equalTo("Fred")))
-                .andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/id/1")));
+                .andExpect(jsonPath("$.customer_url", equalTo(API_ID + "1")));
     }
 
     @Test
@@ -188,20 +193,20 @@ class CustomerControllerTest {
         when(customerService.updateCustomer(any(Long.class), any(CustomerDTO.class)))
                 .thenReturn(returnDTO);
         //when/then
-        mockMvc.perform(put("/api/v1/customers/id/2")
+        mockMvc.perform(put(API_ID + "2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(customer)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(asJsonString(returnDTO)))
                 .andExpect(jsonPath("$.firstname", equalTo("Fred")))
-                .andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/id/2")));
+                .andExpect(jsonPath("$.customer_url", equalTo(API_ID + "2")));
     }
 
     @Test
     void updateCustomerException() throws Exception {
         //given
         CustomerDTO newDTO = new CustomerDTO(new MetaDTO(), "Jose",
-                "Ortega", "/api/v1/customer/id/2");
+                "Ortega", "API_ID2");
 
         when(customerService.updateCustomer(any(Long.class), any(CustomerDTO.class)))
                 .thenThrow(new CustomerNotFoundException(2L));
@@ -212,11 +217,48 @@ class CustomerControllerTest {
         });
 
         //then
-        mockMvc.perform(put("/api/v1/customers/id/2")
+        mockMvc.perform(put(API_ID + "2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(newDTO)))
                 .andExpect(status().is4xxClientError())
                 .andExpect(result -> assertTrue(result
                         .getResolvedException() instanceof CustomerNotFoundException));
+    }
+
+    @Test
+    void deleteCustomer() throws Exception {
+        //given
+        Customer newCustomer = new Customer(new Meta(), "Jose",
+                "Ortega", API_ID + "2");
+        newCustomer.setId(2L);
+        when(customerRepository.existsById(any(Long.class))).thenReturn(true);
+
+        //when
+        customerService.deleteCustomer(2L);
+
+        //then
+        mockMvc.perform(delete(API_ID + "2"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteCustomerEmpty() throws Exception {
+        //given
+        when(customerRepository.existsById(2L)).thenReturn(false);
+        // throw to void methods
+        doThrow(new CustomerNotFoundException(2L)).when(customerService).deleteCustomer(2L);
+
+        //when
+        assertThrows(CustomerNotFoundException.class, () -> {
+            customerService.deleteCustomer(2L);
+        });
+
+        //then
+        mockMvc.perform(delete(API_ID + "2"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(result -> assertTrue(result
+                        .getResolvedException() instanceof CustomerNotFoundException))
+                .andExpect(result -> assertEquals("Customer id: " + 2 + ", not found!",
+                        result.getResolvedException().getMessage()));
     }
 }

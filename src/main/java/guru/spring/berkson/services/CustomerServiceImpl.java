@@ -80,6 +80,12 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.customerToCustomerDTO(customerRepository.save(savedCustomer));
     }
 
+    @Override
+    public void deleteCustomer(Long id) throws CustomerNotFoundException {
+        if (!this.existById(id)) throw new CustomerNotFoundException(id);
+        customerRepository.deleteById(id);
+    }
+
     public boolean existById(Long id) {
         return customerRepository.existsById(id);
     }
