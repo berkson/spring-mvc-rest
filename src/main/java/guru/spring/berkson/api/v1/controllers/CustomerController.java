@@ -50,4 +50,10 @@ public class CustomerController {
         return new ResponseEntity<>(
                 customerService.createNewCustomer(customerDTO), HttpStatus.CREATED);
     }
+
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDTO updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
+        return customerService.updateCustomer(id, customerDTO);
+    }
 }

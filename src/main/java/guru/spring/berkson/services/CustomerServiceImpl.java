@@ -1,5 +1,6 @@
 package guru.spring.berkson.services;
 
+import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.domain.Customer;
@@ -57,5 +58,29 @@ public class CustomerServiceImpl implements CustomerService {
         saved.setCustomerUrl("/api/v1/customers/id/" + saved.getId());
         customerRepository.save(saved);
         return customerMapper.customerToCustomerDTO(saved);
+    }
+
+    @Override
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO)
+            throws CustomerNotFoundException {
+        Customer savedCustomer;
+        if (!this.existById(id))
+            throw new CustomerNotFoundException(id);
+        else {
+            savedCustomer = customerRepository.getById(id);
+        }
+        savedCustomer.getMeta().setNextUrl(customerDTO.getMeta().getNextUrl());
+        savedCustomer.getMeta().setPreviousUrl(customerDTO.getMeta().getPreviousUrl());
+        savedCustomer.getMeta().setPage(customerDTO.getMeta().getPage());
+        savedCustomer.getMeta().setLimite(customerDTO.getMeta().getLimite());
+        savedCustomer.getMeta().setCount(customerDTO.getMeta().getCount());
+        savedCustomer.setFirstname(customerDTO.getFirstname());
+        savedCustomer.setLastname(customerDTO.getLastname());
+
+        return customerMapper.customerToCustomerDTO(customerRepository.save(savedCustomer));
+    }
+
+    public boolean existById(Long id) {
+        return customerRepository.existsById(id);
     }
 }
