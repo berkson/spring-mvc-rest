@@ -206,6 +206,7 @@ class CustomerServiceTest {
     @Test
     void deleteCustomer() {
         Long id = 2L;
+        when(customerRepository.existsById(5L)).thenReturn(true);
 
         customerRepository.deleteById(id);
 
