@@ -3,6 +3,7 @@ package guru.spring.berkson.api.v1.controllers;
 import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.api.v1.model.MetaDTO;
+import guru.spring.berkson.repositories.CustomerRepository;
 import guru.spring.berkson.services.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,9 @@ class CustomerControllerTest {
 
     @Mock
     CustomerService customerService;
+
+    @Mock
+    CustomerRepository customerRepository;
 
     @InjectMocks
     CustomerController customerController;
@@ -196,14 +200,15 @@ class CustomerControllerTest {
     @Test
     void updateCustomerException() throws Exception {
         //given
-        when(customerService.updateCustomer(10L, any(CustomerDTO.class)))
-                .thenThrow(new CustomerNotFoundException(10L));
-
         CustomerDTO newDTO = new CustomerDTO(new MetaDTO(), "Jose",
-                "Ortega", "/api/v1/customer/id/10");
+                "Ortega", "/api/v1/customer/id/2");
+
+        when(customerService.updateCustomer(any(Long.class), any(CustomerDTO.class)))
+                .thenThrow(new CustomerNotFoundException(2L));
+
         //when
         assertThrows(CustomerNotFoundException.class, () -> {
-            CustomerDTO customerDTO = customerService.updateCustomer(10L, newDTO);
+            CustomerDTO customerDTO = customerService.updateCustomer(2L, newDTO);
         });
 
         //then
