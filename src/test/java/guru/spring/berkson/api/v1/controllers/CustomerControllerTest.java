@@ -173,12 +173,13 @@ class CustomerControllerTest {
         customer.setFirstname("Fred");
         customer.setLastname("Flintstone");
         customer.setMeta(metaDTO);
-        customer.setCustomerUrl("/api/v1/customers/id/2");
+        customer.setCustomerUrl("/api/v1/customers/id");
 
         CustomerDTO returnDTO = new CustomerDTO();
         returnDTO.setFirstname(customer.getFirstname());
         returnDTO.setLastname(customer.getLastname());
         returnDTO.setCustomerUrl("/api/v1/customers/id/2");
+        returnDTO.setMeta(metaDTO);
 
         when(customerService.updateCustomer(any(Long.class), any(CustomerDTO.class)))
                 .thenReturn(returnDTO);
@@ -195,7 +196,7 @@ class CustomerControllerTest {
     @Test
     void updateCustomerException() throws Exception {
         //given
-        when(customerService.updateCustomer(any(Long.class), any(CustomerDTO.class)))
+        when(customerService.updateCustomer(10L, any(CustomerDTO.class)))
                 .thenThrow(new CustomerNotFoundException(10L));
 
         CustomerDTO newDTO = new CustomerDTO(new MetaDTO(), "Jose",

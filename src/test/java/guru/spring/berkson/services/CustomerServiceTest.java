@@ -1,5 +1,6 @@
 package guru.spring.berkson.services;
 
+import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.api.v1.model.MetaDTO;
@@ -137,6 +138,68 @@ class CustomerServiceTest {
         assertNotNull(savedDTO);
         assertEquals(customerDTO.getFirstname(), savedDTO.getFirstname());
         assertEquals("/api/v1/customers/id/6", savedDTO.getCustomerUrl());
+
+    }
+
+    @Test
+    void updateNewCustomer() {
+        //given
+        // Enviado no request
+        MetaDTO metaDTO = new MetaDTO(31, 5, 1,
+                "/shop/products/?page=1&limit5",
+                "/shops/products?page=2$limit5");
+        CustomerDTO dtoClient = new CustomerDTO();
+        dtoClient.setFirstname("Jim");
+        dtoClient.setLastname("Kasama");
+        dtoClient.setCustomerUrl("/api/v1/customers/id/6");
+        dtoClient.setMeta(metaDTO);
+
+        // salvo no banco
+        Customer banco = new Customer();
+        banco.setMeta(new Meta());
+        banco.setFirstname("João");
+        banco.setLastname("Guaraci");
+        banco.setId(6L);
+        banco.getMeta().setNextUrl(dtoClient.getMeta().getNextUrl());
+        banco.getMeta().setPreviousUrl(dtoClient.getMeta().getPreviousUrl());
+        banco.getMeta().setPage(dtoClient.getMeta().getPage());
+        banco.getMeta().setLimite(dtoClient.getMeta().getLimite());
+        banco.getMeta().setCount(dtoClient.getMeta().getCount());
+        banco.setCustomerUrl("/api/v1/customers/id/6");
+
+        // modificado banco
+        Customer modificado = new Customer();
+        modificado.setMeta(new Meta());
+        modificado.setFirstname(dtoClient.getFirstname());
+        modificado.setLastname(dtoClient.getLastname());
+        modificado.setId(6L);
+        modificado.getMeta().setNextUrl(dtoClient.getMeta().getNextUrl());
+        modificado.getMeta().setPreviousUrl(dtoClient.getMeta().getPreviousUrl());
+        modificado.getMeta().setPage(dtoClient.getMeta().getPage());
+        modificado.getMeta().setLimite(dtoClient.getMeta().getLimite());
+        modificado.getMeta().setCount(dtoClient.getMeta().getCount());
+        modificado.setCustomerUrl("/api/v1/customers/id/6");
+
+        when(customerRepository.existsById(6L)).thenReturn(true);
+        when(customerRepository.getById(6L)).thenReturn(banco);
+        when(customerRepository.save(any(Customer.class))).thenReturn(modificado);
+
+        //when
+        CustomerDTO savedDTO = customerService.updateCustomer(6L, dtoClient);
+
+        //then
+        assertNotNull(savedDTO);
+        assertEquals(dtoClient.getFirstname(), savedDTO.getFirstname());
+        assertEquals(modificado.getMeta().getPage(), dtoClient.getMeta().getPage());
+    }
+
+    @Test
+    void updateCustomerEmpty() {
+        when(customerRepository.existsById(6L)).thenReturn(false);
+
+        assertThrows(CustomerNotFoundException.class, () -> {
+            customerService.updateCustomer(6L, new CustomerDTO());
+        });
 
     }
 }
