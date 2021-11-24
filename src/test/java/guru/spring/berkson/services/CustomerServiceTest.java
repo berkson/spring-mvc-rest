@@ -205,17 +205,16 @@ class CustomerServiceTest {
 
     @Test
     void deleteCustomer() {
-        Long id = 2L;
         when(customerRepository.existsById(5L)).thenReturn(true);
 
-        customerRepository.deleteById(id);
+        customerService.deleteCustomer(5L);
 
-        verify(customerRepository, times(1)).deleteById(id);
+        verify(customerRepository, times(1)).deleteById(5L);
     }
 
     @Test
     void deleteCustomerEmpty() {
-        when(customerRepository.existsById(5L)).thenReturn(false);
+        when(customerRepository.existsById(any(Long.class))).thenReturn(false).thenThrow(new CustomerNotFoundException(5L));
 
         assertThrows(CustomerNotFoundException.class, () -> {
             customerService.deleteCustomer(5L);
