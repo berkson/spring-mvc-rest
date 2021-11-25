@@ -55,8 +55,7 @@ jobs:
           name: Integration Test
           command: mvn verify
       - codecov/upload:
-          token: |
-            echo $TOKEN_CODECOV
+          token: TOKEN_CODECOV
           file: target/site/jacoco/jacoco.xml
 
 # Invoke jobs via workflows
