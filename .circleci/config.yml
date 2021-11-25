@@ -56,7 +56,7 @@ jobs:
           command: mvn verify
       #upload to codecov
       - codecov/upload:
-          token: ${TOKEN_CODECOV}
+          token: $TOKEN_CODECOV
           file: target/site/jacoco/jacoco.xml
 
 # Invoke jobs via workflows
