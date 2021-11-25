@@ -54,10 +54,15 @@ jobs:
       - run:
           name: Integration Test
           command: mvn verify
-      #upload to codecov
-      - codecov/upload:
-          token: ${TOKEN_CODECOV}
-          file: target/site/jacoco/jacoco.xml
+      #setting the token environment variable
+      -run:
+        name: "Setting CodeCov Token"
+        command: |
+          export TOKEN_CODECOV
+        #upload to codecov
+        - codecov/upload:
+            token: $TOKEN_CODECOV
+            file: target/site/jacoco/jacoco.xml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
