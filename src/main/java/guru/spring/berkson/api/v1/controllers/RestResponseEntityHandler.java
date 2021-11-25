@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  * Created by berkson
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * Time: 10:21
  */
 @RestControllerAdvice
-public class CustomerNotFoundAdvice {
+public class RestResponseEntityHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CustomerNotFoundException.class)
-    ResponseEntity<String> customerNotFoundHandler(CustomerNotFoundException e){
+    ResponseEntity<String> customerNotFoundHandler(CustomerNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

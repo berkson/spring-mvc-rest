@@ -55,7 +55,7 @@ class CustomerControllerTest {
     CustomerController customerController;
 
     @InjectMocks
-    CustomerNotFoundAdvice customerNotFoundAdvice;
+    RestResponseEntityHandler restResponseEntityHandler;
 
     MockMvc mockMvc;
 
@@ -63,7 +63,7 @@ class CustomerControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(customerController)
-                .setControllerAdvice(customerNotFoundAdvice).build();
+                .setControllerAdvice(restResponseEntityHandler).build();
         MetaDTO customerMeta = new MetaDTO(52, 12, 5, PREVIOUSURL, NEXTURL);
         customerDTO = new CustomerDTO(customerMeta, FIRSTNAME, LASTNAME, URL);
     }
