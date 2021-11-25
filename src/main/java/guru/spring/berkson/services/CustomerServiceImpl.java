@@ -1,6 +1,7 @@
 package guru.spring.berkson.services;
 
 import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
+import guru.spring.berkson.api.v1.controllers.CustomerController;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.domain.Customer;
@@ -55,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
         customer.getMeta().setCustomer(customer);
         Customer saved = customerRepository.save(customer);
-        saved.setCustomerUrl("/api/v1/customers/id/" + saved.getId());
+        saved.setCustomerUrl(this.getBaseUrl(saved.getId()));
         customerRepository.save(saved);
         return customerMapper.customerToCustomerDTO(saved);
     }
@@ -88,5 +89,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     public boolean existById(Long id) {
         return customerRepository.existsById(id);
+    }
+
+    private String getBaseUrl(Long id) {
+        return CustomerController.BASE_URL + "/id/" + id;
     }
 }

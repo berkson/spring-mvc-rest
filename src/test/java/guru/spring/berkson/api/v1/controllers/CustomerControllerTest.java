@@ -41,7 +41,7 @@ class CustomerControllerTest {
     private static final String URL = "/shop/customer/123";
     private static final String PREVIOUSURL = "/shop/products/?page=2&limit=5";
     private static final String NEXTURL = "/shop/products/?page=3&limit=10";
-    private static final String API_ID = "/api/v1/customers/id/";
+    private static final String API_ID = CustomerController.BASE_URL + "/id/";
 
     CustomerDTO customerDTO;
 
@@ -84,7 +84,7 @@ class CustomerControllerTest {
 
         //then
         assertNotNull(customerDTOS);
-        mockMvc.perform(get("/api/v1/customers")
+        mockMvc.perform(get(CustomerController.BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customers", hasSize(2)));
@@ -101,7 +101,7 @@ class CustomerControllerTest {
 
         //then
         assertNotNull(customerDTO);
-        mockMvc.perform(get("/api/v1/customers/" + FIRSTNAME)
+        mockMvc.perform(get(CustomerController.BASE_URL + "/" + FIRSTNAME)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo(FIRSTNAME)));
@@ -163,7 +163,7 @@ class CustomerControllerTest {
 
         when(customerService.createNewCustomer(any(CustomerDTO.class))).thenReturn(returnDTO);
         //when/then
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post(CustomerController.BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(customer)))
                 .andExpect(status().isCreated())
@@ -182,12 +182,12 @@ class CustomerControllerTest {
         customer.setFirstname("Fred");
         customer.setLastname("Flintstone");
         customer.setMeta(metaDTO);
-        customer.setCustomerUrl("/api/v1/customers/id");
+        customer.setCustomerUrl(CustomerController.BASE_URL + "/id");
 
         CustomerDTO returnDTO = new CustomerDTO();
         returnDTO.setFirstname(customer.getFirstname());
         returnDTO.setLastname(customer.getLastname());
-        returnDTO.setCustomerUrl("/api/v1/customers/id/2");
+        returnDTO.setCustomerUrl(CustomerController.BASE_URL + "/id/2");
         returnDTO.setMeta(metaDTO);
 
         when(customerService.updateCustomer(any(Long.class), any(CustomerDTO.class)))
@@ -206,7 +206,7 @@ class CustomerControllerTest {
     void updateCustomerException() throws Exception {
         //given
         CustomerDTO newDTO = new CustomerDTO(new MetaDTO(), "Jose",
-                "Ortega", "API_ID2");
+                "Ortega", API_ID + "2");
 
         when(customerService.updateCustomer(any(Long.class), any(CustomerDTO.class)))
                 .thenThrow(new CustomerNotFoundException(2L));

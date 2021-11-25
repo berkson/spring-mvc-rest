@@ -1,6 +1,7 @@
 package guru.spring.berkson.services;
 
 import guru.spring.berkson.api.exceptions.CustomerNotFoundException;
+import guru.spring.berkson.api.v1.controllers.CustomerController;
 import guru.spring.berkson.api.v1.mapper.CustomerMapper;
 import guru.spring.berkson.api.v1.model.CustomerDTO;
 import guru.spring.berkson.api.v1.model.MetaDTO;
@@ -137,7 +138,7 @@ class CustomerServiceTest {
         //then
         assertNotNull(savedDTO);
         assertEquals(customerDTO.getFirstname(), savedDTO.getFirstname());
-        assertEquals("/api/v1/customers/id/6", savedDTO.getCustomerUrl());
+        assertEquals(CustomerController.BASE_URL + "/id/6", savedDTO.getCustomerUrl());
 
     }
 
@@ -151,7 +152,7 @@ class CustomerServiceTest {
         CustomerDTO dtoClient = new CustomerDTO();
         dtoClient.setFirstname("Jim");
         dtoClient.setLastname("Kasama");
-        dtoClient.setCustomerUrl("/api/v1/customers/id/6");
+        dtoClient.setCustomerUrl(CustomerController.BASE_URL + "/id/6");
         dtoClient.setMeta(metaDTO);
 
         // salvo no banco
@@ -165,7 +166,7 @@ class CustomerServiceTest {
         banco.getMeta().setPage(dtoClient.getMeta().getPage());
         banco.getMeta().setLimite(dtoClient.getMeta().getLimite());
         banco.getMeta().setCount(dtoClient.getMeta().getCount());
-        banco.setCustomerUrl("/api/v1/customers/id/6");
+        banco.setCustomerUrl(CustomerController.BASE_URL + "/id/6");
 
         // modificado banco
         Customer modificado = new Customer();
@@ -178,7 +179,7 @@ class CustomerServiceTest {
         modificado.getMeta().setPage(dtoClient.getMeta().getPage());
         modificado.getMeta().setLimite(dtoClient.getMeta().getLimite());
         modificado.getMeta().setCount(dtoClient.getMeta().getCount());
-        modificado.setCustomerUrl("/api/v1/customers/id/6");
+        modificado.setCustomerUrl(CustomerController.BASE_URL + "/id/6");
 
         when(customerRepository.existsById(6L)).thenReturn(true);
         when(customerRepository.getById(6L)).thenReturn(banco);
