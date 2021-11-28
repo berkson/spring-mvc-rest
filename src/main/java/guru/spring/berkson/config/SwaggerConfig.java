@@ -19,8 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     // essa é a configuração padrão do swagger, mesmo que não inclua o bean abaixo.
-    // Caso deseje expor diferentes pontos da api
-    // deve realizar configuração mais granular.
+    // Caso deseje expor diferentes pontos da api deve realizar configuração mais granular.
     @Bean
     public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
