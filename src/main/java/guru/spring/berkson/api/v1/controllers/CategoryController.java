@@ -2,7 +2,10 @@ package guru.spring.berkson.api.v1.controllers;
 
 import guru.spring.berkson.api.v1.model.CategoryDTO;
 import guru.spring.berkson.api.v1.model.CategoryListDTO;
+import guru.spring.berkson.config.SwaggerConfig;
 import guru.spring.berkson.services.CategoryService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/api/v1/categories")
+@Api(tags = {SwaggerConfig.CATEGORY_TAG}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -26,12 +30,14 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @ApiOperation(value = "Lista todas as categorias")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryListDTO> listCategories() {
         return new ResponseEntity<>(
                 new CategoryListDTO(categoryService.getAllCategories()), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Retorna a categoria com a nome/descrição solicitada")
     @GetMapping(value = "/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDTO> getByNameCategories(@PathVariable String name) {
         return new ResponseEntity<>(
