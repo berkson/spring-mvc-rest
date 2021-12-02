@@ -1,6 +1,7 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="CustomersDTO" type="CustomersDTOType"/>
-    <xs:complexType name="metaType">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="CustomersDTO" type="CustomersDTO"/>
+    <xs:complexType name="meta">
         <xs:sequence>
             <xs:element type="xs:byte" name="count"/>
             <xs:element type="xs:byte" name="limite"/>
@@ -9,18 +10,17 @@
             <xs:element type="xs:string" name="nextUrl"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="customersType">
+    <xs:complexType name="Customer">
         <xs:sequence>
-            <xs:element type="metaType" name="meta" minOccurs="0"/>
+            <xs:element type="meta" name="meta" minOccurs="0"/>
             <xs:element type="xs:string" name="firstname" minOccurs="0"/>
             <xs:element type="xs:string" name="lastname" minOccurs="0"/>
-            <xs:element type="xs:string" name="customer_url" minOccurs="0"/>
-            <xs:element type="customersType" name="customers" minOccurs="0"/>
+            <xs:element type="xs:string" name="customerUrl" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="CustomersDTOType">
+    <xs:complexType name="CustomersDTO">
         <xs:sequence>
-            <xs:element type="customersType" name="customers"/>
+            <xs:element type="Customer" name="customers" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>
