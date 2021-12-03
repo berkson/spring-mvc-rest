@@ -1,12 +1,13 @@
 package guru.spring.berkson.api.v1.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.io.Serializable;
 
 /**
  * Created by Berkson Ximenes
@@ -18,14 +19,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CustomerDTO {
+public class CustomerDTO implements Serializable {
 
     private MetaDTO meta;
-    @ApiModelProperty(value = "Primeiro nome do cliente", required = true)
+    @ApiModelProperty(value = "Primeiro nome do cliente")
     private String firstname;
-    @ApiModelProperty(value = "Último nome do cliente", required = true)
+    @ApiModelProperty(value = "Último nome do cliente")
     private String lastname;
     @ApiModelProperty(value = "URL do cliente")
-    @JsonProperty("customer_url")
+    @Getter(AccessLevel.NONE)
     private String customerUrl;
+
+    @JsonProperty(value = "customer_url")
+    @JacksonXmlProperty(localName = "customerUrl")
+    public String getCustomerUrl() {
+        return customerUrl;
+    }
 }

@@ -1,10 +1,14 @@
 package guru.spring.berkson.api.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 /**
  * Created by Berkson Ximenes
@@ -16,10 +20,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MetaDTO {
+public class MetaDTO implements Serializable {
     private Integer count;
     private Integer limite;
     private Integer page;
+    @JsonProperty(value = "previous_url")
+    @JacksonXmlProperty(localName = "previousUrl")
     private String previousUrl;
+    @JsonProperty(value = "next_url")
+    @JacksonXmlProperty(localName = "nextUrl")
     private String nextUrl;
 }
